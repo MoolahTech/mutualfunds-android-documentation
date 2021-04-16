@@ -43,7 +43,7 @@ intent.putExtra("lastName", "Name")
 // intent.putExtra("identityToken", "USER_IDENTITY_TOKEN")
 this.startActivity(intent)
 ```
-Remember, the OTP in the UAT / Staging environment is 123456.
+**Remember, the OTP in the UAT / Staging environment is 123456.**
 
 2. The KYC process consists of:
 * Phone number verification using OTP.
