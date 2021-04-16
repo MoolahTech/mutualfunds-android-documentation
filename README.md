@@ -33,6 +33,8 @@ dependencies {
 
 1. Call `KycActivity` with an intent containing email and phone number, and optionally the users' first and last name. The identity token will also be required in a future update, but for now this is enough:
 ```kotlin
+import `in`.savvyapp.mutualfunds_android.kyc.KycActivity
+
 val intent = Intent(activity, KycActivity::class.java)
 intent.putExtra("email", "email@gmail.com")
 intent.putExtra("phoneNumber", "+919876543210")
