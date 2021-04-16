@@ -22,7 +22,7 @@ repositories {
 6. Install the SDK in your android app as you would regularly:
 ```gradle
 dependencies {
-    implementation 'com.github.MoolahTech:mutualfunds-android:1.0.0-beta1'
+    implementation 'com.github.MoolahTech:mutualfunds-android:1.0.0-beta2'
 }
 ```
 7. Build your app. If everything passes, you are ready to use the SDK!
@@ -43,6 +43,8 @@ intent.putExtra("lastName", "Name")
 // intent.putExtra("identityToken", "USER_IDENTITY_TOKEN")
 this.startActivity(intent)
 ```
+Remember, the OTP in the UAT / Staging environment is 123456.
+
 2. The KYC process consists of:
 * Phone number verification using OTP.
 * PAN number check. If the PAN is already KYC-verified, then short KYC is triggered, otherwise long KYC is triggered.
