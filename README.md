@@ -19,4 +19,15 @@ repositories {
         }
  }
  ```
+6. Install the SDK in your android app as you would regularly:
+```gradle
+dependencies {
+    implementation 'com.github.MoolahTech:mutualfunds-android:0.1.4'
+}
+```
+7. Build your app. If everything passes, you are ready to use the SDK!
+
+## Usage (Staging / UAT)
+
+### KYC
 
