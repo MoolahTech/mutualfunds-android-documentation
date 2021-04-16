@@ -41,7 +41,26 @@ intent.putExtra("lastName", "Name")
 // intent.putExtra("identityToken", "USER_IDENTITY_TOKEN")
 this.startActivity(intent)
 ```
-2. Get the KYC result:
+2. The KYC process consists of:
+* Phone number verification using OTP.
+* PAN number check. If the PAN is already KYC-verified, then short KYC is triggered, otherwise long KYC is triggered.
+
+**Short KYC:** In addition to the previous steps, the SDK also performs:
+* Bank account verification
+* Capture of KYC details like date of birth, occupation and PEP check.
+* Folio creation
+
+**Long KYC:** This is an involved process, and the SDK performs:
+* Capture of KYC details like date of birth, occupation, marital status etc
+* PAN card image capture + details submission
+* Address proof image capture (aadhaar, passport, drivers' license or voter ID) + details submission
+* Signature on plain white paper image capture
+* Video verification
+* Bank account verification
+* Contract signing using aadhaar e-sign
+* Submission to KRA for verification
+
+3. Get the KYC result:
 ```kotlin
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
