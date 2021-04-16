@@ -76,3 +76,6 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 **KYC failure**: The result code is Activity.RESULT_CANCELED. There was an error during KYC, and user may not proceed. Retrying the KYC will usually *not* work. For recoverable errors, the SDK has a built-in retry mechanism. For these kinds of errors, we recommend logging them and reporting them along with the intent parameters. The intent will contain:
 * `errorCode`
 * `message`
+
+### Customization
+**Colors: ** To customize the colors, please override the theme in your activity. This is an experimental feature and may have bugs!! We are actively working on fixing this.
