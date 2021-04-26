@@ -35,7 +35,7 @@ Every request from the SDK to the our API must be authenticated using your acces
 
 **User create call**
 
-POST ($BASE_URL)/partners/users
+**POST** ($BASE_URL)**/partners/users**
 
 Params:
 | name | type | example |
@@ -46,6 +46,7 @@ Params:
 | last_name | string | Bar |
 
 _Response:_
+
 Headers:
 | name | type | example |
 | ---- | ---- |:-------:|
