@@ -27,6 +27,36 @@ dependencies {
 ```
 7. Build your app. If everything passes, you are ready to use the SDK!
 
+To use the SDKs, you have to first get access to your access key and secret key. Request your SPOC for these credentials. Staging credentials will be given first, and then production credentials will be issued once a round of testing has been performed. The API urls will also be shared via your SPOC.
+
+## User creation
+
+Every request from the SDK to the our API must be authenticated using your access key (which identifies the partner making the request) and an IDENTITY_TOKEN (which identifies the user making the request). A user must be created via a server-to-server call using your access and secret key. In return, an expiring token is passed back. Please store this token SAFELY, preferably in the android keystore or other similar storage mechanism and pass it to the SDK.
+
+**User create call**
+
+POST ($BASE_URL)/partners/users
+
+Params:
+| name | type | example |
+| ---- | ---- |:-------:|
+| phone_number | string | 9876543210 OR +919876543210 |
+| email | string | test@example.com |
+| first_name | string | Foo |
+| last_name | string | Bar |
+
+_Response:_
+Headers:
+| name | type | example |
+| ---- | ---- |:-------:|
+| IDENTITY_TOKEN | string | abcd.efg.hijk |
+| Content-Type | string | application/json |
+
+Body:
+| name | type | example |
+| ---- | ---- |:-------:|
+| uuid | string | abcd-efg-hijk-xyz |
+
 ## Usage (Staging / UAT)
 
 ### KYC
