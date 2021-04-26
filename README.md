@@ -28,6 +28,7 @@ dependencies {
 7. Build your app. If everything passes, you are ready to use the SDK!
 
 To use the SDKs, you have to first get access to your access key and secret key. Request your SPOC for these credentials. Staging credentials will be given first, and then production credentials will be issued once a round of testing has been performed. The API urls will also be shared via your SPOC.
+**The secret key must be kept secret**. Please make sure this key is not on the phone, or anywhere in your database or permanent storage. It must be kept in your live environment as a env. variable or use other similar key storage mechanisms like AWS KMS. Leakage of your secret key could compromise all your users and could lead to very bad things.
 
 ## User creation
 
@@ -67,11 +68,8 @@ Body:
 import `in`.savvyapp.mutualfunds_android.kyc.KycActivity
 
 val intent = Intent(activity, KycActivity::class.java)
-intent.putExtra("email", "email@gmail.com")
-intent.putExtra("phoneNumber", "+919876543210")
-intent.putExtra("firstName", "Name")
-intent.putExtra("lastName", "Name")
-// intent.putExtra("identityToken", "USER_IDENTITY_TOKEN")
+intent.putExtra("identityToken", "IDENTITY_TOKEN")
+intent.putExtra("accessKey", "PARTNER_ACCESS_KEY")
 this.startActivity(intent)
 ```
 **Remember, the OTP in the UAT / Staging environment is 123456.**
