@@ -38,13 +38,49 @@ Every request from the SDK to the our API must be authenticated using your acces
 
 **POST** ($BASE_URL)**/partners/users**
 
-Params:
+Headers:
+| name | type | example |
+| ---- | ---- |:-------:|
+| PARTNER_ACCESS_KEY | string | abcde |
+| PARTNER_SECRET_KEY | string | xyzab |
+
+Params (root key must be `user`: `user: { phone_number.... }`):
 | name | type | example |
 | ---- | ---- |:-------:|
 | phone_number | string | 9876543210 OR +919876543210 |
 | email | string | test@example.com |
 | first_name | string | Foo |
 | last_name | string | Bar |
+
+_Response:_
+
+Headers:
+| name | type | example |
+| ---- | ---- |:-------:|
+| IDENTITY_TOKEN | string | abcd.efg.hijk |
+| Content-Type | string | application/json |
+
+Body:
+| name | type | example |
+| ---- | ---- |:-------:|
+| uuid | string | abcd-efg-hijk-xyz |
+
+The identity token expires every 24 hours, so please make sure to have a refresh mechanism built in.
+
+**Token refresh call**
+
+**POST** ($BASE_URL)**/partners/users/new_token**
+
+Headers:
+| name | type | example |
+| ---- | ---- |:-------:|
+| PARTNER_ACCESS_KEY | string | abcde |
+| PARTNER_SECRET_KEY | string | xyzab |
+
+Params (root key must be `user`: `user: { uuid.... }`):
+| name | type | example |
+| ---- | ---- |:-------:|
+| uuid | string | abcd-efg-rf-rrrr |
 
 _Response:_
 
@@ -113,6 +149,9 @@ The Purchase SDK assumes that KYC has already been completed on **the same devic
 
 **UI based journey**
 1. Call `PurchaseActivity` with the following parameters:
+
+* IDENTITY_TOKEN (mandatory)
+* PARTNER_ACCESS_KEY (mandatory)
 * productCode (optional). The fund in which you'd like to invest. If not entered, a screen will be shown for ths user to select. The following product codes are currently supported:
 
 | Product name  | productCode |
