@@ -41,8 +41,8 @@ Every request from the SDK to the our API must be authenticated using your acces
 Headers:
 | name | type | example |
 | ---- | ---- |:-------:|
-| PARTNER_ACCESS_KEY | string | abcde |
-| PARTNER_SECRET_KEY | string | xyzab |
+| X-PARTNER-ACCESS-KEY | string | abcde |
+| X-PARTNER-SECRET-KEY | string | xyzab |
 
 Params (root key must be `user`: `user: { phone_number.... }`):
 | name | type | example |
@@ -57,7 +57,7 @@ _Response:_
 Headers:
 | name | type | example |
 | ---- | ---- |:-------:|
-| IDENTITY_TOKEN | string | abcd.efg.hijk |
+| X-USER-IDENTITY-TOKEN | string | abcd.efg.hijk |
 | Content-Type | string | application/json |
 
 Body:
@@ -74,8 +74,8 @@ The identity token expires every 24 hours, so please make sure to have a refresh
 Headers:
 | name | type | example |
 | ---- | ---- |:-------:|
-| PARTNER_ACCESS_KEY | string | abcde |
-| PARTNER_SECRET_KEY | string | xyzab |
+| X-PARTNER-ACCESS-KEY | string | abcde |
+| X-PARTNER-SECRET-KEY | string | xyzab |
 
 Params (root key must be `user`: `user: { uuid.... }`):
 | name | type | example |
@@ -87,7 +87,7 @@ _Response:_
 Headers:
 | name | type | example |
 | ---- | ---- |:-------:|
-| IDENTITY_TOKEN | string | abcd.efg.hijk |
+| X-USER-IDENTITY-TOKEN | string | abcd.efg.hijk |
 | Content-Type | string | application/json |
 
 Body:
