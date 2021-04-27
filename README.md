@@ -30,6 +30,9 @@ dependencies {
 To use the SDKs, you have to first get access to your access key and secret key. Request your SPOC for these credentials. Staging credentials will be given first, and then production credentials will be issued once a round of testing has been performed. The API urls will also be shared via your SPOC.
 **The secret key must be kept secret**. Please make sure this key is not on the phone, or anywhere in your database or permanent storage. It must be kept in your live environment as a env. variable or use other similar key storage mechanisms like AWS KMS. Leakage of your secret key could compromise all your users and could lead to very bad things.
 
+**IMPORTANT: The steps below also detail how to use the SDK to build your own UI. You can only build your own UI if you are a licensed distributor with a valid ARN number.** If you are not a distributor, you must use the standard SDK UI.
+In the below documentation, we will use the `<YourUi>` symbol to denote how to build your own UI for the respective step.
+
 ## User creation
 
 Every request from the SDK to the our API must be authenticated using your access key (which identifies the partner making the request) and an IDENTITY_TOKEN (which identifies the user making the request). A user must be created via a server-to-server call using your access and secret key. In return, an expiring token is passed back. Please store this token SAFELY, preferably in the android keystore or other similar storage mechanism and pass it to the SDK.
@@ -44,7 +47,7 @@ Headers:
 | X-PARTNER-ACCESS-KEY | string | abcde |
 | X-PARTNER-SECRET-KEY | string | xyzab |
 
-Params (root key must be `user`: `user: { phone_number.... }`):
+Params (root key must be user: `user: { phone_number.... }`):
 | name | type | example |
 | ---- | ---- |:-------:|
 | phone_number | string | 9876543210 OR +919876543210 |
@@ -77,7 +80,7 @@ Headers:
 | X-PARTNER-ACCESS-KEY | string | abcde |
 | X-PARTNER-SECRET-KEY | string | xyzab |
 
-Params (root key must be `user`: `user: { uuid.... }`):
+Params (root key must be user: `user: { uuid.... }`):
 | name | type | example |
 | ---- | ---- |:-------:|
 | uuid | string | abcd-efg-rf-rrrr |
@@ -108,11 +111,33 @@ intent.putExtra("identityToken", "IDENTITY_TOKEN")
 intent.putExtra("accessKey", "PARTNER_ACCESS_KEY")
 this.startActivity(intent)
 ```
-**Remember, the OTP in the UAT / Staging environment is 123456.**
 
 2. The KYC process consists of:
-* Phone number verification using OTP.
 * PAN number check. If the PAN is already KYC-verified, then short KYC is triggered, otherwise long KYC is triggered.
+
+`<YourUI>` 
+
+Pan check consists of 2 steps:
+Check Pan:
+```kotlin
+val req = CheckPanRequest(panNumber: String, context: Context)
+req.call(view: View, loader: Loadable?, callback: (response: CheckPanResponse?) -> Unit, failureCallback: ((response: CheckPanResponse?) -> Unit)?
+
+// view: Root view of current screen, so that system error messages may be displayed (Mandatory)
+// loader: Implementation of Loadable interface. This is used if you want to change state of a particular view to show a loading icon (Optional)
+// callback: A handler for a successful response. Returns a CheckPanResponse (Mandatory)
+// failureCallback: A handler for an unsuccessful response (Optional)
+```
+CheckPanResponse contains the method `isShortKyc` which must be called. If true, you can proceed. Otherwise redirect to the Long KYC process which is a separate SDK. **THIS IS VERY IMPORTANT**. Not doing this is a compliance violation, and can result in action.
+
+Submit Pan:
+```kotlin
+val req = SubmitPanRequest(context: Context)
+req.call(view: View, loader: Loadable?, callback: (response: CheckPanResponse?) -> Unit, failureCallback: ((response: CheckPanResponse?) -> Unit)?
+```
+If submit PAN is successful, you can go to the next step
+
+`</YourUI>`
 
 **Short KYC:** In addition to the previous steps, the SDK also performs:
 * Bank account verification
