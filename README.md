@@ -133,7 +133,7 @@ req.call(view: View, loader: Loadable?, callback: (response: CheckPanResponse?) 
 // callback: A handler for a successful response. Returns a CheckPanResponse (Mandatory)
 // failureCallback: A handler for an unsuccessful response (Optional)
 ```
-CheckPanResponse contains the method `isShortKyc` which must be called. If true, you can proceed. Otherwise redirect to the Long KYC process which is a separate SDK. **THIS IS VERY IMPORTANT**. Not doing this is a compliance violation, and can result in action.
+CheckPanResponse contains the method `isShortKyc` which must be called. If true, you can proceed to SubmitPanRequest. Otherwise redirect to the Long KYC process which is a separate SDK. **THIS IS VERY IMPORTANT**. Not doing this is a compliance violation, and can result in action.
 
 Submit Pan:
 ```kotlin
