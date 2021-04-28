@@ -100,15 +100,20 @@ Body:
 
 ## Usage (Staging / UAT)
 
+### Initialization
+
+Initialize the SDK by calling `init`. Make sure to do this before calling any of the activities, or before using the SKD in any way:
+```kotlin
+MFSDK.init(Context, PARTNER_ACCESS_KEY, USER_IDENTITY_TOKEN)
+```
+
 ### KYC
 
-1. Call `KycActivity` with an intent containing email and phone number, and optionally the users' first and last name. The identity token will also be required in a future update, but for now this is enough:
+1. Call `KycActivity`:
 ```kotlin
 import `in`.savvyapp.mutualfunds_android.kyc.KycActivity
 
 val intent = Intent(activity, KycActivity::class.java)
-intent.putExtra("identityToken", "IDENTITY_TOKEN")
-intent.putExtra("accessKey", "PARTNER_ACCESS_KEY")
 this.startActivity(intent)
 ```
 
