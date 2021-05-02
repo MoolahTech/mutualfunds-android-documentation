@@ -175,13 +175,10 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 ### Purchase
 
 The purchase process consists of picking which mutual fund the purchase should go into, entering the purchase amount & payment method, and then executing the transaction using UPI or internet banking. The SDK provides the option of both a UI based journey, and also a programmatic journey, where you can create your own UI and pass in the fund into which you would like the user to save. While you can submit the the purchase programmatically, the transaction completion which involves interacting with the payment gateway must be handled by the SDK due to compliance restrictions.
-The Purchase SDK assumes that KYC has already been completed on **the same device**.
 
 **UI based journey**
 1. Call `PurchaseActivity` with the following parameters:
 
-* IDENTITY_TOKEN (mandatory)
-* PARTNER_ACCESS_KEY (mandatory)
 * productCode (optional). The fund in which you'd like to invest. If not entered, a screen will be shown for ths user to select. The following product codes are currently supported:
 
 | Product name  | productCode |
@@ -207,6 +204,34 @@ The Purchase SDK assumes that KYC has already been completed on **the same devic
 | Internet banking | I                 |
 
 * upiVpa (required if payment method is UPI). If payment method is UPI, you must also pass in the Virtual Payment Address of the user.
+
+### Redemption
+The redemption process consists of picking which mutual fund the redemption should come from and then executing the transaction. The SDK provides the option of both a UI based journey, and also a programmatic journey, where you can create your own UI and pass in the fund from which you would like the user to withdraw. While you can submit the the redemption programmatically, we recommend using the SDK due to the complexity of the process involved.
+
+For liquid funds (code 1565), there is an option of instant withdrawal. Upto to 90% of balance or Rs 50,000 (whichever is lower) can be transferred immediately via IMPS and lands in the users' bank account within 15 seconds. The rest of the money is credited within 1 business day. The instant option is not available for non-liquid funds.
+
+All redemptions (excluding instant) are subject to OTP approval.
+
+**UI based journey**
+1. Call `RedemptionActivity` with the following parameters:
+
+* productCode (mandatory). The fund from which the redemption should happen. Refer to above table for the product codes.
+
+2. Get the redemption result:
+```kotlin
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        ...
+}
+```
+**Redemption success**: The result code is Activity.RESULT_OK. The balance will be updated.
+
+### Balance Check
+
+The balance check SDK is built as a fragment that can be included anywhere. Simply create a new fragment: `BalanceFragment()` and display wherever you'd like. For example:
+```kotlin
+supportFragmentManager.beginTransaction().replace(R.id.content_main, BalanceFragment()).commit()
+```
 
 ### Customization
 **Colors: ** To customize the colors, please override the theme in your activity. This is an experimental feature and may have bugs!! We are actively working on fixing this.
