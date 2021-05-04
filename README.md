@@ -114,6 +114,7 @@ MFSDK.init(Context, PARTNER_ACCESS_KEY, USER_IDENTITY_TOKEN)
 import `in`.savvyapp.mutualfunds_android.kyc.KycActivity
 
 val intent = Intent(activity, KycActivity::class.java)
+intent.putExtra("phoneNumber", "9898989898")
 this.startActivity(intent)
 ```
 
@@ -176,10 +177,20 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 
 The purchase process consists of picking which mutual fund the purchase should go into, entering the purchase amount & payment method, and then executing the transaction using UPI or internet banking. The SDK provides the option of both a UI based journey, and also a programmatic journey, where you can create your own UI and pass in the fund into which you would like the user to save. While you can submit the the purchase programmatically, the transaction completion which involves interacting with the payment gateway must be handled by the SDK due to compliance restrictions.
 
-**UI based journey**
-1. Call `PurchaseActivity` with the following parameters:
+There are 2 kinds of purchase transactions, under which there are 2 types of payment gateways you can be used:
 
-* productCode (optional). The fund in which you'd like to invest. If not entered, a screen will be shown for ths user to select. The following product codes are currently supported:
+**Regular / one-time purchase**
+Make a `Purchase` object with the following params, and then call `open()`:
+* **activity: Activity** (required) The calling activity.
+* **pgType: PGType** (required) This can either be PGType.INTERNAL or PGType.EXTERNAL. Internal is the AMCs payment gateway, and external is the Savvy payment gateway. In most cases, you want to use the INTERNAL PG, but the AMC payment gateways are sometimes not functional. As a backup, the partner may choose to use the EXTERNAL PG to minimize user disruption.
+* **amount: Double?** (optional for INTERNAL PG, mandatory for EXTERNAL PG)
+* **transactionId: String** (required) Partner generated ID. Use a uuid or similar globally unique ID. This will be used to update your backend of transaction events.
+* **phoneNumber: String** (required)
+* **productCode: String** (required) See below for supported product codes
+* **preferredPaymentMethod: String** (optional, and only used for INTERNAL PG). The payment method that you'd like to use. See below for supported methods.
+* **upiVpa: String** (required if payment method is UPI, and only used for INTERNAL PG) If payment method is UPI, you must also pass in the Virtual Payment Address of the user.
+* **loader: Loadable?** (optional) While initializing, the SDK may take 2-3 seconds. To show user a loading animation, you can use the Loadable interface.
+* **listener: ExternalPGResponsesListener?** (only required for EXTERNAL PG) This will update your app on payment statuses. INTERNAL PG will update via the activity intent result; EXTERNAL PG will update using this interface
 
 | Product name  | productCode |
 | ------------- |:-------------:|
@@ -195,15 +206,23 @@ The purchase process consists of picking which mutual fund the purchase should g
 | ICICI Prudential Asset Allocator Fund (FOF) - Growth | AMP |
 | ICICI Prudential Regular Gold Savings Fund (FOF) - Growth | 1815 |
 
-* amount (optional). The amount you'd like the invest. If not entered, a text input field will be shown for the user to select.
-* preferredPaymentMethod (optional). The payment method that you'd like to use. The following are supported:
-
 | Description | preferredPaymentMethod |
 | ----------- |:----------------------:|
 | UPI         | UPI                    |
 | Internet banking | I                 |
 
-* upiVpa (required if payment method is UPI). If payment method is UPI, you must also pass in the Virtual Payment Address of the user.
+**Mandate / Standing Instruction**
+Make a `MandatePurchase` object with the following params, and then call `open()`:
+* **activity: Activity** (required)
+* **firstAmount: Double** (required) On registering a mandate, a first-time debit amount must be specified. This must match the minimum required for the mutual fund. For 1565, the minimum first time deposit is Rs. 100.
+* **maxOngoingAmount: Double** (required) This is the maximum that you can debit from the user everyday. This must match the minimum required for the mutual fund. For 1565, the minimum ongoing is Re. 1.
+* **transactionId: String** (required)
+* **phoneNumber: String** (required)
+* **listener: ExternalPGResponsesListener** (required)
+* **productCode: String** (required)
+* **startDate: Date** (required) The starting date of the mandate
+* **endDate: Date** (required) The end date of the mandate. We recommend keeping this far in the future to avoid re-registering mandates. The max is 99 years.
+**loader: Loadable?** (optional)
 
 ### Redemption
 The redemption process consists of picking which mutual fund the redemption should come from and then executing the transaction. The SDK provides the option of both a UI based journey, and also a programmatic journey, where you can create your own UI and pass in the fund from which you would like the user to withdraw. While you can submit the the redemption programmatically, we recommend using the SDK due to the complexity of the process involved.
