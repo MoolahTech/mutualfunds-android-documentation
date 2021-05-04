@@ -226,7 +226,7 @@ Make a **`MandatePurchase`** object with the following params, and then call `op
 * **productCode: String** (required)
 * **startDate: Date** (required) The starting date of the mandate
 * **endDate: Date** (required) The end date of the mandate. We recommend keeping this far in the future to avoid re-registering mandates. The max is 99 years.
-**loader: Loadable?** (optional)
+* **loader: Loadable?** (optional)
 
 ### Redemption
 The redemption process consists of picking which mutual fund the redemption should come from and then executing the transaction. The SDK provides the option of both a UI based journey, and also a programmatic journey, where you can create your own UI and pass in the fund from which you would like the user to withdraw. While you can submit the the redemption programmatically, we recommend using the SDK due to the complexity of the process involved.
