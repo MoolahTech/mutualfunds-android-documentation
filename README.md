@@ -179,8 +179,10 @@ The purchase process consists of picking which mutual fund the purchase should g
 
 There are 2 kinds of purchase transactions, under which there are 2 types of payment gateways you can be used:
 
-**Regular / one-time purchase**
-Make a `Purchase` object with the following params, and then call `open()`:
+### Regular / one-time purchase
+
+Make a **`Purchase`** object with the following params, and then call `open()`:
+
 * **activity: Activity** (required) The calling activity.
 * **pgType: PGType** (required) This can either be PGType.INTERNAL or PGType.EXTERNAL. Internal is the AMCs payment gateway, and external is the Savvy payment gateway. In most cases, you want to use the INTERNAL PG, but the AMC payment gateways are sometimes not functional. As a backup, the partner may choose to use the EXTERNAL PG to minimize user disruption.
 * **amount: Double?** (optional for INTERNAL PG, mandatory for EXTERNAL PG)
@@ -211,8 +213,10 @@ Make a `Purchase` object with the following params, and then call `open()`:
 | UPI         | UPI                    |
 | Internet banking | I                 |
 
-**Mandate / Standing Instruction**
-Make a `MandatePurchase` object with the following params, and then call `open()`:
+### Mandate / Standing Instruction
+
+Make a **`MandatePurchase`** object with the following params, and then call `open()`:
+
 * **activity: Activity** (required)
 * **firstAmount: Double** (required) On registering a mandate, a first-time debit amount must be specified. This must match the minimum required for the mutual fund. For 1565, the minimum first time deposit is Rs. 100.
 * **maxOngoingAmount: Double** (required) This is the maximum that you can debit from the user everyday. This must match the minimum required for the mutual fund. For 1565, the minimum ongoing is Re. 1.
