@@ -181,18 +181,27 @@ There are 2 kinds of purchase transactions, under which there are 2 types of pay
 
 ### Regular / one-time purchase
 
-Make a **`Purchase`** object with the following params, and then call `open()`:
+Call `PurchaseActivity` with the following parameters in the intent:
 
-* **activity: Activity** (required) The calling activity.
-* **pgType: PGType** (required) This can either be PGType.INTERNAL or PGType.EXTERNAL. Internal is the AMCs payment gateway, and external is the Savvy payment gateway. In most cases, you want to use the INTERNAL PG, but the AMC payment gateways are sometimes not functional. As a backup, the partner may choose to use the EXTERNAL PG to minimize user disruption.
-* **amount: Double?** (optional for INTERNAL PG, mandatory for EXTERNAL PG)
-* **transactionId: String** (required) Partner generated ID. Use a uuid or similar globally unique ID. This will be used to update your backend of transaction events.
+* **pgType: PGType converted to String** (required) This can either be PGType.INTERNAL or PGType.EXTERNAL. Internal is the AMCs payment gateway, and external is the Savvy payment gateway. In most cases, you want to use the INTERNAL PG, but the AMC payment gateways are sometimes not functional. As a backup, the partner may choose to use the EXTERNAL PG to minimize user disruption. To pass this in, please do `PGType.INTERNAL.name`
+* **amount: Int?** (optional for INTERNAL PG, mandatory for EXTERNAL PG)
+* **partnerTransactionId: String** (required) Partner generated ID. Use a uuid or similar globally unique ID. This will be used to update your backend of transaction events.
 * **phoneNumber: String** (required)
 * **productCode: String** (required) See below for supported product codes
 * **preferredPaymentMethod: String** (optional, and only used for INTERNAL PG). The payment method that you'd like to use. See below for supported methods.
 * **upiVpa: String** (required if payment method is UPI, and only used for INTERNAL PG) If payment method is UPI, you must also pass in the Virtual Payment Address of the user.
-* **loader: Loadable?** (optional) While initializing, the SDK may take 2-3 seconds. To show user a loading animation, you can use the Loadable interface.
-* **listener: ExternalPGResponsesListener?** (only required for EXTERNAL PG) This will update your app on payment statuses. INTERNAL PG will update via the activity intent result; EXTERNAL PG will update using this interface
+
+Example:
+```kotlin
+val intent = Intent(activity, PurchaseActivity::class.java)
+intent.putExtra("productCode", "1565")
+intent.putExtra("amount", 100)
+intent.putExtra("partnerTransactionId", System.currentTimeMillis().toString())
+intent.putExtra("phoneNumber", "9898989898")
+intent.putExtra("pgType", PGType.INTERNAL.name)
+
+this.startActivityForResult(intent, 1)
+```
 
 | Product name  | productCode |
 | ------------- |:-------------:|
@@ -213,20 +222,48 @@ Make a **`Purchase`** object with the following params, and then call `open()`:
 | UPI         | UPI                    |
 | Internet banking | I                 |
 
+`PurchaseActivity` response:
+```kotlin
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        ...
+}
+```
+
+In case of success, the resultCode will be Activity.RESULT_OK, in case of failure it will be Activity.RESULT_CANCELLED.
+The intent contains the key `message`, which you may choose to show to the user.
+
 ### Mandate / Standing Instruction
 
-Make a **`MandatePurchase`** object with the following params, and then call `open()`:
+Make a **`MandatePurchaseActivity`** activity with the following params in the intent:
 
-* **activity: Activity** (required)
 * **firstAmount: Double** (required) On registering a mandate, a first-time debit amount must be specified. This must match the minimum required for the mutual fund. For 1565, the minimum first time deposit is Rs. 100.
 * **maxOngoingAmount: Double** (required) This is the maximum that you can debit from the user everyday. This must match the minimum required for the mutual fund. For 1565, the minimum ongoing is Re. 1.
-* **transactionId: String** (required)
+* **partnerTransactionId: String** (required)
 * **phoneNumber: String** (required)
-* **listener: ExternalPGResponsesListener** (required)
 * **productCode: String** (required)
-* **startDate: Date** (required) The starting date of the mandate
-* **endDate: Date** (required) The end date of the mandate. We recommend keeping this far in the future to avoid re-registering mandates. The max is 99 years.
-* **loader: Loadable?** (optional)
+* **startDate: String** (required) The starting date of the mandate. Format mentioned in the example below.
+* **endDate: String** (required) The end date of the mandate. We recommend keeping this far in the future to avoid re-registering mandates. The max is 99 years.
+
+Example:
+```kotlin
+val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.UK)
+val cal = Calendar.getInstance()
+cal.add(Calendar.YEAR, 20)
+val startDateString = sdf.format(Date())
+val endDateString = sdf.format(cal.time)
+
+val intent = Intent(activity, MandatePurchaseActivity::class.java)
+intent.putExtra("productCode", "1565")
+intent.putExtra("firstAmount", 100.toDouble())
+intent.putExtra("maxOngoingAmount", 1000.toDouble())
+intent.putExtra("partnerTransactionId", System.currentTimeMillis().toString())
+intent.putExtra("phoneNumber", "9898989898")
+intent.putExtra("startDate", startDateString)
+intent.putExtra("endDate", endDateString)
+
+this.startActivityForResult(intent, 2)
+```
 
 ### Redemption
 The redemption process consists of picking which mutual fund the redemption should come from and then executing the transaction. The SDK provides the option of both a UI based journey, and also a programmatic journey, where you can create your own UI and pass in the fund from which you would like the user to withdraw. While you can submit the the redemption programmatically, we recommend using the SDK due to the complexity of the process involved.
