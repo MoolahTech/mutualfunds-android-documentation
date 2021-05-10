@@ -303,11 +303,12 @@ supportFragmentManager.beginTransaction().replace(R.id.content_main, BalanceFrag
 
 ### Callbacks
 
-There are a few asynchronous events that you will need updates about. Currently, there are 3 events:
+There are a few asynchronous events that you will need updates about. Currently, there are 4 events:
 
 1. User long KYC status update
 2. Deposit transaction status update
 3. Withdrawal transaction status update
+4. Mandate registration status update
 
 While the params sent for each of these callbacks is different, each callback is sent with a hash string. This hash string is a pipe-joined string of all the params sent, which is then hashed using HMAC with SHA256 using your secret key. You **must** verify this hash at your end, otherwise attackers might simply be able to spoof requests to your open endpoints.
 
@@ -371,6 +372,31 @@ The possible statuses are: `'pending', 'completed', 'error'`
 * pending is when the withdrawal has been initiated
 * completed is when the money has been returned to the users' bank account
 * error is when the transaction has failed
+
+The hash string is generated as follows:
+```ruby
+hash_string = "transaction_type|transaction_id|status_is|status_was|amount"
+hash = HMAC('sha256', hash_string, secret_key)
+```
+
+**Mandate registration status update**
+Params sent:
+```ruby
+      {
+        transaction_type: 'mandate',
+        transaction_id: <YOUR_ID>, # This is the ID of the first transaction of the mandate. This will also be the ID of a deposit.
+        status_is: <CURRENT STATUS>,
+        status_was: <PREVIOUS STATUS>,
+        amount: <AMOUNT> # This is the max ongoing amount
+        hash: <HASH STRING>
+      }
+```
+The possible statuses are: `'pending', 'pending_approval', 'completed', 'error'`
+
+* pending is when the mandate process has been initiated
+* pending_approval is when the user has given the appropriate permissions, and is pending verification with the bank
+* completed is when the mandate is accepted by the bank
+* error is when the mandate is cancelled for some reason (wrong permission, bank rejection etc)
 
 The hash string is generated as follows:
 ```ruby
