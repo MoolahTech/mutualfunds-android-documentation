@@ -301,7 +301,7 @@ There are a few asynchronous events that you will need updates about. Currently,
 2. Deposit transaction status update
 3. Withdrawal transaction status update
 
-While the params sent for each of these callbacks is different, each callback is sent with a hash string. This hash string is a pipe-joined string of all the params sent, which is then hashed using HMAC with SHA256. You **must** verify this hash at your end, otherwise attackers might simply be able to spoof requests to your open endpoints.
+While the params sent for each of these callbacks is different, each callback is sent with a hash string. This hash string is a pipe-joined string of all the params sent, which is then hashed using HMAC with SHA256 using your secret key. You **must** verify this hash at your end, otherwise attackers might simply be able to spoof requests to your open endpoints.
 
 **User long KYC status update**
 Params sent:
@@ -314,7 +314,61 @@ Params sent:
         hash: <HASH STRING>
       }
 ```
+The possible statuses are: `'pending', 'accepted', 'rejected'`
+The hash string is generated as follows:
+```ruby
+hash_string = "transaction_type|uuid|status_is|status_was"
+hash = HMAC('sha256', hash_string, secret_key)
+```
 
+**Deposit transaction status update**
+Params sent:
+```ruby
+      {
+        transaction_type: 'deposit',
+        transaction_id: <YOUR_ID>,
+        status_is: <CURRENT STATUS>,
+        status_was: <PREVIOUS STATUS>,
+        amount: <AMOUNT>
+        hash: <HASH STRING>
+      }
+```
+The possible statuses are: `'in_progress', 'pending_investment', 'completed', 'error'`
+
+* in_progress is when the deposit is initiated by the partner
+* pending_investment is when the money is debited from the users' bank account
+* completed is when the money has been invested and units are allocated
+* error is when the transaction has failed
+
+The hash string is generated as follows:
+```ruby
+hash_string = "transaction_type|transaction_id|status_is|status_was|amount"
+hash = HMAC('sha256', hash_string, secret_key)
+```
+
+**Withdrawal transaction status update**
+Params sent:
+```ruby
+      {
+        transaction_type: 'withdrawal',
+        transaction_id: <YOUR_ID>,
+        status_is: <CURRENT STATUS>,
+        status_was: <PREVIOUS STATUS>,
+        amount: <AMOUNT>
+        hash: <HASH STRING>
+      }
+```
+The possible statuses are: `'pending', 'completed', 'error'`
+
+* pending is when the withdrawal has been initiated
+* completed is when the money has been returned to the users' bank account
+* error is when the transaction has failed
+
+The hash string is generated as follows:
+```ruby
+hash_string = "transaction_type|transaction_id|status_is|status_was|amount"
+hash = HMAC('sha256', hash_string, secret_key)
+```
 
 ### Customization
 **Colors: ** To customize the colors, please override the theme in your activity. This is an experimental feature and may have bugs!! We are actively working on fixing this.
