@@ -276,6 +276,14 @@ All redemptions (excluding instant) are subject to OTP approval.
 1. Call `RedemptionActivity` with the following parameters:
 
 * productCode (mandatory). The fund from which the redemption should happen. Refer to above table for the product codes.
+* partnerTransactionId: String (required) Partner generated ID. Use a uuid or similar globally unique ID. This will be used to update your backend of transaction events.
+
+```kotlin
+val intent = Intent(activity, RedemptionActivity::class.java)
+intent.putExtra("productCode", "1565")
+intent.putExtra("partnerTransactionId", "1234")
+this.startActivity(intent)
+```
 
 2. Get the redemption result:
 ```kotlin
