@@ -293,5 +293,28 @@ The balance check SDK is built as a fragment that can be included anywhere. Simp
 supportFragmentManager.beginTransaction().replace(R.id.content_main, BalanceFragment()).commit()
 ```
 
+### Callbacks
+
+There are a few asynchronous events that you will need updates about. Currently, there are 3 events:
+
+1. User long KYC status update
+2. Deposit transaction status update
+3. Withdrawal transaction status update
+
+While the params sent for each of these callbacks is different, each callback is sent with a hash string. This hash string is a pipe-joined string of all the params sent, which is then hashed using HMAC with SHA256. You **must** verify this hash at your end, otherwise attackers might simply be able to spoof requests to your open endpoints.
+
+**User long KYC status update**
+Params sent:
+```ruby
+      {
+        transaction_type: 'long_kyc',
+        user_id: <UUID>,
+        status_is: <CURRENT STATUS>,
+        status_was: <PREVIOUS STATUS>,
+        hash: <HASH STRING>
+      }
+```
+
+
 ### Customization
 **Colors: ** To customize the colors, please override the theme in your activity. This is an experimental feature and may have bugs!! We are actively working on fixing this.
