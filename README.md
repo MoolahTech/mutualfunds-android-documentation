@@ -104,7 +104,7 @@ Body:
 
 Initialize the SDK by calling `init`. Make sure to do this before calling any of the activities, or before using the SKD in any way:
 ```kotlin
-MFSDK.init(Context, PARTNER_ACCESS_KEY, USER_IDENTITY_TOKEN)
+MFSDK.init(Context, PARTNER_ACCESS_KEY, USER_IDENTITY_TOKEN, isProduction: Boolean)
 ```
 
 ### KYC
