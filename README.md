@@ -277,13 +277,12 @@ The status (success / failure) will be received as regular from the callbacks.
 
 Make a **`MandatePurchaseActivity`** activity with the following params in the intent:
 
-* **firstAmount: Double** (required) On registering a mandate, a first-time debit amount must be specified. This must match the minimum required for the mutual fund. For 1565, the minimum first time deposit is Rs. 100.
-* **maxOngoingAmount: Double** (required) This is the maximum that you can debit from the user everyday. This must match the minimum required for the mutual fund. For 1565, the minimum ongoing is Re. 1.
+* **maxOngoingAmount: Double** (required) This is the maximum that you can debit from the user everyday. This must match the minimum required for the mutual fund.
 * **partnerTransactionId: String** (required)
-* **phoneNumber: String** (required)
 * **productCode: String** (required)
 * **startDate: String** (required) The starting date of the mandate. Format mentioned in the example below.
 * **endDate: String** (required) The end date of the mandate. We recommend keeping this far in the future to avoid re-registering mandates. The max is 99 years.
+* **upiVpa: String** (optional) Please DON'T pass this in for staging as UPI VPA checking is unavailable on staging. Pass this in on production to pre-fill the VPA.
 
 Example:
 ```kotlin
@@ -295,10 +294,8 @@ val endDateString = sdf.format(cal.time)
 
 val intent = Intent(activity, MandatePurchaseActivity::class.java)
 intent.putExtra("productCode", "1565")
-intent.putExtra("firstAmount", 100.toDouble())
 intent.putExtra("maxOngoingAmount", 1000.toDouble())
 intent.putExtra("partnerTransactionId", System.currentTimeMillis().toString())
-intent.putExtra("phoneNumber", "9898989898")
 intent.putExtra("startDate", startDateString)
 intent.putExtra("endDate", endDateString)
 
@@ -445,4 +442,14 @@ hash = HMAC('sha256', hash_string, secret_key)
 ```
 
 ### Customization
-**Colors: ** To customize the colors, please override the theme in your activity. This is an experimental feature and may have bugs!! We are actively working on fixing this.
+**Colors: ** To customize the colors, please override the following colors:
+
+```xml
+<color name="savvy_color_primary">#005B75</color>
+<color name="savvy_color_secondary">#FF03DAC5</color>
+<color name="savvy_color_accent">#EF9F39</color>
+<color name="savvy_color_on_primary">#FFF</color>
+<color name="savvy_color_screen_background">#FFF</color>
+<color name="savvy_color_on_background">#FF757575</color>
+<color name="savvy_stepper_default">#D8D8D8</color>
+```
