@@ -449,6 +449,7 @@ hash = HMAC('sha256', hash_string, secret_key)
 <color name="savvy_color_secondary">#FF03DAC5</color>
 <color name="savvy_color_accent">#EF9F39</color>
 <color name="savvy_color_on_primary">#FFF</color>
+<color name="savvy_color_on_secondary">#FF03DAC5</color>
 <color name="savvy_color_screen_background">#FFF</color>
 <color name="savvy_color_on_background">#FF757575</color>
 <color name="savvy_stepper_default">#D8D8D8</color>
