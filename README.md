@@ -424,7 +424,6 @@ Params sent:
         transaction_id: <YOUR_ID>, # This is the ID of the first transaction of the mandate. This will also be the ID of a deposit.
         status_is: <CURRENT STATUS>,
         status_was: <PREVIOUS STATUS>,
-        amount: <AMOUNT> # This is the max ongoing amount
         hash: <HASH STRING>
       }
 ```
