@@ -428,7 +428,7 @@ Params sent:
         hash: <HASH STRING>
       }
 ```
-The possible statuses are: `'pending', 'pending_approval', 'completed', 'error'`
+The possible statuses are: `'pending', 'accepted_by_user', 'completed', 'error', 'revoked'`
 
 * pending is when the mandate process has been initiated
 * pending_approval is when the user has given the appropriate permissions, and is pending verification with the bank
