@@ -239,7 +239,7 @@ There could be a use-case where you need to trigger a payment request programati
 
 In case of UPI, this will automatically trigger a payment request, and the user will receive a notification from their payment app such GPay, PhonePe etc.
 
-**POST** ($BASE_URL)**/partners/icici_pru/deposits**
+**POST** ($BASE_URL)**/partners/deposits**
 
 Headers:
 | name | type | example |
