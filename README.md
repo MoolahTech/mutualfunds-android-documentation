@@ -277,6 +277,7 @@ The status (success / failure) will be received as regular from the callbacks.
 
 Make a **`MandatePurchaseActivity`** activity with the following params in the intent:
 
+* **mandateType: String** (required) One of ["upi". "api"]
 * **maxOngoingAmount: Double** (required) This is the maximum that you can debit from the user everyday. This must match the minimum required for the mutual fund.
 * **partnerTransactionId: String** (required)
 * **productCode: String** (required)
@@ -294,6 +295,7 @@ val startDateString = sdf.format(Date())
 val endDateString = sdf.format(cal.time)
 
 val intent = Intent(activity, MandatePurchaseActivity::class.java)
+intent.putExtra("mandateType", "api")
 intent.putExtra("productCode", "1565")
 intent.putExtra("maxOngoingAmount", 1000.toDouble())
 intent.putExtra("partnerTransactionId", System.currentTimeMillis().toString())
