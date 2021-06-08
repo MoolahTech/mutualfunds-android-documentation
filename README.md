@@ -342,6 +342,29 @@ The balance check SDK is built as a fragment that can be included anywhere. Simp
 supportFragmentManager.beginTransaction().replace(R.id.content_main, BalanceFragment()).commit()
 ```
 
+Alternatively, to fetch the balance via API:
+**GET** ($BASE_URL)**/partners/users/mf_balance**
+
+Headers:
+| name | type | example |
+| ---- | ---- |:-------:|
+| X-PARTNER-ACCESS-KEY | string | abcde |
+| X-USER-IDENTITY-TOKEN | string | xyzab |
+
+_Response:_
+
+Headers:
+| name | type | example |
+| ---- | ---- |:-------:|
+| Content-Type | string | application/json |
+
+Body:
+| name | type | example |
+| ---- | ---- |:-------:|
+| available_investment_balance | Double | 1000.12 |
+| latest_deposit_date | Date | 01/01/2021 |
+| investment_plus_pending_balance | Double | 1500.12, includes money not invested yet |
+
 ### Callbacks
 
 There are a few asynchronous events that you will need updates about. Currently, there are 4 events:
