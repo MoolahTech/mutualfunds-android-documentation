@@ -434,6 +434,9 @@ hash = HMAC('sha256', hash_string, secret_key)
 ```
 
 **User folio opening status update**
+
+POSTed to your user callback URL
+
 Params sent:
 ```ruby
       {
@@ -448,25 +451,6 @@ The possible statuses are: `'true', 'nil'`
 The hash string is generated as follows:
 ```ruby
 hash_string = "transaction_type|uuid|status_is|status_was"
-hash = HMAC('sha256', hash_string, secret_key)
-```
-
-**Folio opening update**
-
-POSTed to your user callback URL
-
-Params sent:
-```ruby
-      {
-        transaction_type: 'folio_open',
-        transaction_id: <YOUR_ID>,
-        has_folio_opened: true / false
-      }
-```
-
-The hash string is generated as follows:
-```ruby
-hash_string = "transaction_type|transaction_id|has_folio_opened"
 hash = HMAC('sha256', hash_string, secret_key)
 ```
 
