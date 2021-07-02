@@ -349,7 +349,8 @@ All redemptions (excluding instant) are subject to OTP approval.
 1. Call `RedemptionActivity` with the following parameters:
 
 * **productCode (mandatory)** The fund from which the redemption should happen. Refer to above table for the product codes.
-* **partnerTransactionId: String** (required) Partner generated ID. Use a uuid or similar globally unique ID. This will be used to update your backend of transaction events.
+* **partnerTransactionIdInstant: String** (optional) Partner generated ID. Use a uuid or similar globally unique ID. This will be used to update your backend of transaction events. This will be used for instant withdrawal transactions. This is valid only for liquid funds.
+* **partnerTransactionIdRegular: String** (required) Partner generated ID. Use a uuid or similar globally unique ID. This will be used to update your backend of transaction events. This will be used for regular (OTP-based) withdrawal transactions. Valid for liquid and other funds.
 * * **folioId: String** (required if using multi-folio functionality)
 
 ```kotlin
@@ -426,6 +427,24 @@ Params sent:
       }
 ```
 The possible statuses are: `'pending', 'accepted', 'rejected'`
+The hash string is generated as follows:
+```ruby
+hash_string = "transaction_type|uuid|status_is|status_was"
+hash = HMAC('sha256', hash_string, secret_key)
+```
+
+**User folio opening status update**
+Params sent:
+```ruby
+      {
+        transaction_type: 'folio_open',
+        uuid: <UUID>,
+        status_is: <CURRENT STATUS>,
+        status_was: <PREVIOUS STATUS>,
+        hash: <HASH STRING>
+      }
+```
+The possible statuses are: `'true', 'nil'` 
 The hash string is generated as follows:
 ```ruby
 hash_string = "transaction_type|uuid|status_is|status_was"
